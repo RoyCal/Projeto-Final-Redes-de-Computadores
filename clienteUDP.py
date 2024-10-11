@@ -15,7 +15,8 @@ menu = """Escolha o tipo da requisição:1
 
 req = "0000" # 0000 significa uma requisição
 tipo = "0000" # definindo 0000, que significa uma requisição de data, como default
-identificador = str(random.randint(1, 65535)) # sorteando o número identificador
+
+identificador = "{:016b}".format(random.randint(1, 65535)) # sorteando o número identificador e convertendo para binário de 16 bits
 
 validResponse = False
 while not validResponse: # loop para escolher uma opção válida de requisição
@@ -38,12 +39,18 @@ while not validResponse: # loop para escolher uma opção válida de requisiçã
         case _:
             pass          # Opção inválida inserida pelo usuário
 
-message = req + tipo + identificador # unindo os pedaços para formar a mensagem
+byte_0 = int(req + tipo, 2) # o primeiro byte é composto pelos 4 bits que indicam o tipo da mensagem (requisição ou resposta) + os 4 bits do tipo da requisição
+byte_1 = int(identificador[:8], 2) # o segundo byte é a primeira metade do identificador
+byte_2 = int(identificador[8:], 2) # o terceiro byte é a segunda metade do identificador
 
-clientSocket.sendto(message.encode(), server_address) # envia a mensagem para o servidor
+message = bytes([byte_0, byte_1, byte_2]) # unindo os pedaços para formar a mensagem
+
+clientSocket.sendto(message, server_address) # envia a mensagem para o servidor
 
 data, serverAddress = clientSocket.recvfrom(2048) # recebe a resposta do servidor
 
-print(data.decode()) # imprime a resposta
+os.system("cls")
+print("Resposta do servidor:")
+print(data) # imprime a resposta
 
 clientSocket.close() # fecha a conexão
