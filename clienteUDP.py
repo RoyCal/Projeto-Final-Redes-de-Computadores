@@ -51,6 +51,18 @@ data, serverAddress = clientSocket.recvfrom(2048) # recebe a resposta do servido
 
 os.system("cls")
 print("Resposta do servidor:")
-print(data) # imprime a resposta
+
+# os bytes da resposta são convertidos para inteiro automaticamente quando os acessamos, mas alguns deles são junções de várias informações
+# então precisamos converter alguns deles para binário a fim de obter essas informações
+
+byte_0 = "{:08b}".format(data[0]) # converte o primeiro byte da resposta para binário
+byte_1 = "{:08b}".format(data[1]) # converte o segundo byte da resposta para binário
+byte_2 = "{:08b}".format(data[2]) # converte o terceiro byte da resposta para binário
+byte_3 = data[3] # o quarto byte não precisa ser convertido pois corresponde ao tamanho da mensagem, que ocupa exatamente 1 byte
+
+print("Tipo da mensagem:", byte_0[:4], "| Tipo da requisição:", byte_0[4:]) # a primeira metade do primeiro byte é o tipo da mensagem e a segunda metade é o tipo da requisição
+print("Indentificador:", int(byte_1 + byte_2, 2)) # os dois bytes seguintes, isto é, o segundo e o terceiro, correspondem ao identificador
+print("Tamanho da mensagem:", byte_3) # o quarto byte é o tamanho da mensagem
+print("Mensagem:", data[4:4 + byte_3].decode()) # do quinto byte em diante temos a mensagem, mas só pegamos o tamanho que o servidor forneceu...
 
 clientSocket.close() # fecha a conexão
