@@ -50,7 +50,13 @@ clientSocket.sendto(message, server_address) # envia a mensagem para o servidor
 data, serverAddress = clientSocket.recvfrom(2048) # recebe a resposta do servidor
 
 os.system("cls")
+print("Mensagem enviada ao servidor:")
+print(''.join(f'\\x{byte:02x}' for byte in message), end="\n\n") # imprime a mensagem enviada para o servidor em hexadecimal puro
+
 print("Resposta do servidor:")
+print(''.join(f'\\x{byte:02x}' for byte in data), end="\n\n")    # imprime a resposta do servidor em hexacecimal puro
+
+print("Significado: ") # aqui abaixo são feitas as traduções dos hexadecimais para os caracteres ASCII
 
 # os bytes da resposta são convertidos para inteiro automaticamente quando os acessamos, mas alguns deles são junções de várias informações
 # então precisamos converter alguns deles para binário a fim de obter essas informações
