@@ -58,7 +58,7 @@ print(''.join(f'\\x{byte:02x}' for byte in data), end="\n\n")    # imprime a res
 
 print("Significado: ") # aqui abaixo são feitas as traduções dos hexadecimais para os caracteres ASCII
 
-# os bytes da resposta são convertidos para inteiro automaticamente quando os acessamos, mas alguns deles são junções de mais de uma informação
+# os bytes da resposta que representam números são convertidos para inteiro automaticamente quando os acessamos, mas alguns deles são junções de mais de uma informação
 # então precisamos converter alguns deles para binário a fim de obter essas informações
 
 byte_0 = "{:08b}".format(data[0]) # converte o primeiro byte da resposta para binário
