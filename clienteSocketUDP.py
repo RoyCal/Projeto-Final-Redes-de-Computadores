@@ -69,6 +69,11 @@ byte_3 = data[3] # o quarto byte não precisa ser convertido pois corresponde ao
 print("Tipo da mensagem:", byte_0[:4], "| Tipo da requisição:", byte_0[4:]) # a primeira metade do primeiro byte é o tipo da mensagem e a segunda metade é o tipo da requisição
 print("Indentificador:", int(byte_1 + byte_2, 2)) # os dois bytes seguintes, isto é, o segundo e o terceiro, correspondem ao identificador
 print("Tamanho da mensagem:", byte_3) # o quarto byte é o tamanho da mensagem
-print("Mensagem:", data[4:4 + byte_3].decode()) # do quinto byte em diante temos a mensagem, mas só pegamos o tamanho que o servidor forneceu no tamanho da mensagem...
+
+# do quinto byte em diante temos a mensagem, mas só pegamos o tamanho que o servidor forneceu no tamanho da mensagem...
+if byte_0[4:] == "0010":
+    print("Mensagem:", int.from_bytes(data[4:4 + byte_3], "big")) # no caso da quantidade de requisições, precisamos converter do formato "\x00\x00\x00\x00" para inteiro, pois  
+else:                                                             # o programa pode interpretar cada "\x00" como um caractere ASCII, e não como um inteiro de 8 bits
+    print("Mensagem:", data[4:4 + byte_3].decode()) # nos demais casos, o "\x00" deve ser interpretado como um caractere ASCII, então apenas chamamos o método decode
 
 clientSocket.close() # fecha a conexão
