@@ -1,10 +1,8 @@
 from scapy.layers.inet import IP, UDP
-from scapy.layers.l2 import Ether
-from scapy.sendrecv import srp1
+from scapy.sendrecv import sr1
 
-pacote = Ether()
-pacote /= IP(dst="15.228.191.109", len=0x001f, chksum=0x0000, ttl=128)
-pacote /= UDP(sport=62719, dport=50000, chksum=0x0000, len=0x000b)
+pacote = IP(dst="15.228.191.109")
+pacote /= UDP(sport=62719, dport=50000, chksum=0x0000)
 pacote /= "\x00\xf0\x59"
 
 hex_string = ''.join(f'\\x{byte:02x}' for byte in bytes(pacote))
@@ -31,13 +29,12 @@ print(soma)
 
 print(checksum)
 
-pacote = Ether()
-pacote /= IP(dst="15.228.191.109", len=0x001f, chksum=0x0000, ttl=128, id=48085)
-pacote /= UDP(sport=62719, dport=50000, chksum=int("9f1d", 16), len=0x000b)
+pacote = IP(dst="15.228.191.109")
+pacote /= UDP(sport=62719, dport=50000, chksum=0x0000)
 pacote /= "\x00\xf0\x59"
 
 pacote.show()
 
-resultado = srp1(pacote)
+resultado = sr1(pacote)
 
 resultado.show()
