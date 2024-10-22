@@ -1,37 +1,29 @@
 from scapy.layers.inet import IP, UDP
-from scapy.sendrecv import sr1
+from scapy.sendrecv import sr1, send
+import struct
+
+def calc_checksum(pacote):
+    data = pacote.__bytes__()
+
+    if len(data) % 2 == 1:
+        data += b'\x00'
+
+    total = sum(struct.unpack("!%dH" % (len(data) // 2), data))
+
+    while total > 0xFFFF:
+        total = (total & 0xFFFF) + (total >> 16)
+
+    return ~total & 0xFFFF
 
 pacote = IP(dst="15.228.191.109")
-pacote /= UDP(sport=62719, dport=50000, chksum=0x0000)
-pacote /= "\x00\xf0\x59"
+pacote /= UDP(sport=59155, dport=50000, chksum=0x0000)
+pacote /= b"\x00\xf0\x59"
 
-hex_string = ''.join(f'\\x{byte:02x}' for byte in bytes(pacote))
-
-if((len(hex_string) / 4) % 2 != 0):
-    hex_string += "\\x00"
-
-print(hex_string)
-
-byte_list = [int(hex_string[i:i+2] + hex_string[i+4:i+6], 16) for i in range(2, len(hex_string), 8)]
-
-soma = hex(sum(byte_list))
-
-soma_bin = "{:032b}".format(int(soma, 16))
-
-soma = hex(int(soma_bin[:16], 2) + int(soma_bin[16:], 2))
-
-checksum = "0x"
-
-for num in soma[2:]:
-    checksum += hex(15 - int(num, 16))[2:]
-
-print(soma)
-
-print(checksum)
+checksum = calc_checksum(pacote)
 
 pacote = IP(dst="15.228.191.109")
-pacote /= UDP(sport=62719, dport=50000, chksum=0x0000)
-pacote /= "\x00\xf0\x59"
+pacote /= UDP(sport=59155, dport=50000, chksum=checksum)
+pacote /= b"\x00\xf0\x59"
 
 pacote.show()
 
