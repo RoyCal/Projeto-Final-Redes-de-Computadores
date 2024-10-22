@@ -61,7 +61,7 @@ pacote /= UDP(sport=59155, dport=50000, chksum=0x0000)
 pacote /= message
 
 checksum = calc_checksum(pacote)
-print("Checksum do pacote enviado:", hex(checksum))
+print("Checksum do pacote enviado:", hex(checksum), end="\n\n")
 
 resultado = sr1(pacote)
 print(resultado.__bytes__())
