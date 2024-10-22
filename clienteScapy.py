@@ -56,25 +56,28 @@ byte_2 = int(identificador[8:], 2) # o terceiro byte é a segunda metade do iden
 
 message = bytes([byte_0, byte_1, byte_2]) # unindo os pedaços para formar a mensagem
 
-pacote = IP(dst="15.228.191.109")
-pacote /= UDP(sport=59155, dport=50000, chksum=0x0000)
-pacote /= message
+pacote = IP(dst="15.228.191.109", proto="udp", len=31) # define o cabeçalho IP
+pacote /= UDP(sport=59155, dport=50000, len=11, chksum=0x0000) # encapsula o cabeçalho UDP
+pacote /= message # encapsula o payload 
 
-checksum = calc_checksum(pacote)
+checksum = calc_checksum(pacote) # calula o checksum do pacote
 
-pacote_recebido = sr1(pacote)
+pacote_recebido = sr1(pacote) # envia um pacote ao servidor e captura a resposta
 
-resultado = pacote_recebido.__bytes__()
-
+resultado = pacote_recebido.__bytes__() # converte o pacote recebido para bytes 
 
 os.system("cls")
+
 print("Mensagem enviada ao servidor:")
 print(''.join(f'\\x{byte:02x}' for byte in message), end="\n\n") # imprime a mensagem enviada
 
 print("Pacote completo enviado:")
 print(''.join(f'\\x{byte:02x}' for byte in pacote.__bytes__()), end="\n\n") # imprime o pacote enviado em hexadecimal puro
 
-print("Checksum do pacote enviado:", hex(checksum), end="\n\n")
+pacote.show() # OBS.: o pacote é enviado com o checksum em 0x0000. O servidor não responde caso o checksum seja alterado para o valor calculado
+              # Não sei se estamos calculando o checksum errado, mas acreditamos que não, pois realimos até cálculos manuais e deu o mesmo valor
+
+print("Checksum do pacote enviado:", hex(checksum), end="\n\n") # imprime o checksum do pacote enviado ao servidor
 
 print("Resposta do servidor:")
 print(''.join(f'\\x{byte:02x}' for byte in resultado), end="\n\n")    # imprime a resposta do servidor em hexacecimal puro
