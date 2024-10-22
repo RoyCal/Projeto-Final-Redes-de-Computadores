@@ -61,7 +61,41 @@ pacote /= UDP(sport=59155, dport=50000, chksum=0x0000)
 pacote /= message
 
 checksum = calc_checksum(pacote)
+
+pacote_recebido = sr1(pacote)
+
+resultado = pacote_recebido.__bytes__()
+
+
+os.system("cls")
+print("Mensagem enviada ao servidor:")
+print(''.join(f'\\x{byte:02x}' for byte in message), end="\n\n") # imprime a mensagem enviada
+
+print("Pacote completo enviado:")
+print(''.join(f'\\x{byte:02x}' for byte in pacote.__bytes__()), end="\n\n") # imprime o pacote enviado em hexadecimal puro
+
 print("Checksum do pacote enviado:", hex(checksum), end="\n\n")
 
-resultado = sr1(pacote)
-print(resultado.__bytes__())
+print("Resposta do servidor:")
+print(''.join(f'\\x{byte:02x}' for byte in resultado), end="\n\n")    # imprime a resposta do servidor em hexacecimal puro
+
+print("Significado: ") # aqui abaixo são feitas as traduções dos hexadecimais para os caracteres ASCII
+
+# os bytes da resposta que representam números são convertidos para inteiro automaticamente quando os acessamos, mas alguns deles são junções de mais de uma informação
+# então precisamos converter alguns deles para binário a fim de obter essas informações
+# é parecido com o cliente utilizando socketUDP mas agora precisamos pular a parte dos cabeçalhos para chegar até a mensagem
+
+byte_0 = "{:08b}".format(resultado[28]) # converte o primeiro byte da resposta para binário
+byte_1 = "{:08b}".format(resultado[29]) # converte o segundo byte da resposta para binário
+byte_2 = "{:08b}".format(resultado[30]) # converte o terceiro byte da resposta para binário
+byte_3 = resultado[31] # o quarto byte não precisa ser convertido pois corresponde ao tamanho da mensagem, que ocupa exatamente 1 byte
+
+print("Tipo da mensagem:", byte_0[:4], "| Tipo da requisição:", byte_0[4:]) # a primeira metade do primeiro byte é o tipo da mensagem e a segunda metade é o tipo da requisição
+print("Indentificador:", int(byte_1 + byte_2, 2)) # os dois bytes seguintes, isto é, o segundo e o terceiro, correspondem ao identificador
+print("Tamanho da mensagem:", byte_3) # o quarto byte é o tamanho da mensagem
+
+# do quinto byte em diante temos a mensagem, mas só pegamos o tamanho que o servidor forneceu no tamanho da mensagem...
+if byte_0[4:] == "0010":
+    print("Mensagem:", int.from_bytes(resultado[32:32 + byte_3], "big")) # no caso da quantidade de requisições, precisamos converter do formato "\x00\x00\x00\x00" para inteiro, pois  
+else:                                                             # o programa pode interpretar cada "\x00" como um caractere ASCII, e não como um inteiro de 8 bits
+    print("Mensagem:", resultado[32:32 + byte_3].decode()) # nos demais casos, o "\x00" deve ser interpretado como um caractere ASCII, então apenas chamamos o método decode
