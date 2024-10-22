@@ -74,8 +74,8 @@ print(''.join(f'\\x{byte:02x}' for byte in message), end="\n\n") # imprime a men
 print("Pacote completo enviado:")
 print(''.join(f'\\x{byte:02x}' for byte in pacote.__bytes__()), end="\n\n") # imprime o pacote enviado em hexadecimal puro
 
-pacote.show() # OBS.: o pacote é enviado com o checksum em 0x0000. O servidor não responde caso o checksum seja alterado para o valor calculado
-              # Não sei se estamos calculando o checksum errado, mas acreditamos que não, pois realimos até cálculos manuais e deu o mesmo valor
+pacote.show() # OBS.: O pacote é enviado com o checksum em 0x0000. O servidor não responde se o checksum for alterado para o valor calculado.
+              # Não sei se estamos calculando o checksum errado, mas acreditamos que não, pois realizamos até cálculos manuais e deu o mesmo valor
 
 print("Checksum do pacote enviado:", hex(checksum), end="\n\n") # imprime o checksum do pacote enviado ao servidor
 
