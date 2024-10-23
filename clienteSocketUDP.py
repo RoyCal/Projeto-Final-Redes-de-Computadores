@@ -91,8 +91,8 @@ else:
 
     # do quinto byte em diante temos a mensagem, mas só pegamos o tamanho que o servidor forneceu no tamanho da mensagem...
     if byte_0[4:] == "0010":
-        print("Mensagem:", int.from_bytes(data[4:4 + byte_3], "big")) # no caso da quantidade de requisições, precisamos converter do formato "\x00\x00\x00\x00" para inteiro, pois  
+        print(int.from_bytes(data[4:4 + byte_3], "big")) # no caso da quantidade de requisições, precisamos converter do formato "\x00\x00\x00\x00" para inteiro, pois  
     else:                                                             # o programa pode interpretar cada "\x00" como um caractere ASCII, e não como um inteiro de 8 bits
-        print("Mensagem:", data[4:4 + byte_3].decode()) # nos demais casos, o "\x00" deve ser interpretado como um caractere ASCII, então apenas chamamos o método decode
+        print(data[4:4 + byte_3].decode()) # nos demais casos, o "\x00" deve ser interpretado como um caractere ASCII, então apenas chamamos o método decode
 
 clientSocket.close() # fecha a conexão
