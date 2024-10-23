@@ -20,7 +20,7 @@ def calc_checksum(pacote):
 
     return ~total & 0xFFFF # inverte os bits para fazer o complemento de 1 e limita o valor a 2 bytes
 
-impressao_detalhada = True
+impressao_detalhada = True # variável que controla o tipo da impressão
 
 # menu que será impresso
 menu = """Escolha o tipo da requisição:1
@@ -40,7 +40,7 @@ while not validResponse: # loop para escolher uma opção válida de requisiçã
     os.system("cls")
 
     if impressao_detalhada:
-        print("(Impressão detalhada) ---- pressione ENTER para mudar", end="\n\n")
+        print("(Impressão detalhada) ---- pressione ENTER para mudar", end="\n\n")  # mostra qual tipo de impressão está selecionado
     else:
         print("(Impressão simplificada) - pressione ENTER para mudar", end="\n\n")
 

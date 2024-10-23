@@ -5,7 +5,7 @@ import random
 server_address = ("15.228.191.109", 50000) # definindo o endereço IP e a porta do servidor
 clientSocket = socket(AF_INET, SOCK_DGRAM) # criando o socket com protocolo IPv4 e protocolo UDP
 
-impressao_detalhada = True
+impressao_detalhada = True # variável que controla o tipo da impressão
 
 # menu que será impresso
 menu = """Escolha o tipo da requisição:1
@@ -25,7 +25,7 @@ while not validResponse: # loop para escolher uma opção válida de requisiçã
     os.system("cls")
 
     if impressao_detalhada:
-        print("(Impressão detalhada) ---- pressione ENTER para mudar", end="\n\n")
+        print("(Impressão detalhada) ---- pressione ENTER para mudar", end="\n\n") # mostra qual tipo de impressão está selecionado
     else:
         print("(Impressão simplificada) - pressione ENTER para mudar", end="\n\n")
 
