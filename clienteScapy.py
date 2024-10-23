@@ -23,7 +23,7 @@ def calc_checksum(pacote):
 impressao_detalhada = True # variável que controla o tipo da impressão
 
 # menu que será impresso
-menu = """Escolha o tipo da requisição:1
+menu = """Escolha o tipo da requisição:
 1: Solicitar a data
 2: Solicitar uma frase motivacional
 3: Quantidade de respostas emitidas pelo servidor
