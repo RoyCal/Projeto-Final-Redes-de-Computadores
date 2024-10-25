@@ -1,3 +1,5 @@
+# Vito Elias, Pedro Márcio e Rivando Neto
+
 from scapy.layers.inet import IP, UDP
 from scapy.sendrecv import sr1
 import struct
@@ -59,7 +61,7 @@ while not validResponse: # loop para escolher uma opção válida de requisiçã
         case "4":
             quit()        # Finalizar o código do cliente
         case "":
-            impressao_detalhada = impressao_detalhada ^ True
+            impressao_detalhada = impressao_detalhada ^ True # inverte o estado da variável
         case _:
             pass          # Opção inválida inserida pelo usuário
 
